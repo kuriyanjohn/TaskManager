@@ -3,12 +3,26 @@ const router = express.Router();
 const Task = require('../models/Task');
 const auth = require('../middleware/auth');
 
+const {
+  createTask,
+  getTasks,
+  updateTask,
+  deleteTask
+} = require('../controllers/taskController');
+
+router.post('/', auth, createTask);
+router.get('/', auth, getTasks);
+router.put('/:id', auth, updateTask);
+router.delete('/:id', auth, deleteTask);
+
+module.exports = router;
+
 // Create
-router.post('/', auth, async (req, res) => {
-  const task = new Task({ ...req.body, createdBy: req.user.id });
-  await task.save();
-  res.status(201).json(task);
-});
+// router.post('/', auth, async (req, res) => {
+//   const task = new Task({ ...req.body, createdBy: req.user.id });
+//   await task.save();
+//   res.status(201).json(task);
+// });
 
 // List with search, filter, pagination
 // Query params: q, status, priority, page, limit, sortBy
@@ -31,15 +45,15 @@ router.get('/:id', auth, async (req, res) => {
   if (!task) return res.status(404).json({ message: 'Not found' });
   res.json(task);
 });
-router.put('/:id', auth, async (req, res) => {
-  const task = await Task.findOneAndUpdate({ _id: req.params.id, createdBy: req.user.id }, req.body, { new: true });
-  if (!task) return res.status(404).json({ message: 'Not found' });
-  res.json(task);
-});
-router.delete('/:id', auth, async (req, res) => {
-  const task = await Task.findOneAndDelete({ _id: req.params.id, createdBy: req.user.id });
-  if (!task) return res.status(404).json({ message: 'Not found' });
-  res.json({ message: 'Deleted' });
-});
+// router.put('/:id', auth, async (req, res) => {
+//   const task = await Task.findOneAndUpdate({ _id: req.params.id, createdBy: req.user.id }, req.body, { new: true });
+//   if (!task) return res.status(404).json({ message: 'Not found' });
+//   res.json(task);
+// });
+// router.delete('/:id', auth, async (req, res) => {
+//   const task = await Task.findOneAndDelete({ _id: req.params.id, createdBy: req.user.id });
+//   if (!task) return res.status(404).json({ message: 'Not found' });
+//   res.json({ message: 'Deleted' });
+// });
 
 module.exports = router;

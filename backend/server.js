@@ -8,14 +8,25 @@ const cors = require('cors');
 
 const app = express();
 app.use(helmet());
-app.use(cors({ origin: process.env.CLIENT_URL }));
-app.use(express.json());
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'http://10.139.141.42:3000'
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
+
+app.use(express.json());  
+
 
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
 
 const start = async () => {
   await mongoose.connect(process.env.MONGO_URI);
-  app.listen(process.env.PORT || 5000, () => console.log('Server running'));
+  console.log('mongobd connected'); 
+  app.listen(process.env.PORT,() => console.log(`Server running on ${process.env.PORT}`));
 };
 start();
