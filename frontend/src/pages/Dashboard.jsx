@@ -67,11 +67,22 @@ export default function Dashboard() {
     fetchTasks();
   };
 
+
+  const logout = () => {
+  localStorage.removeItem('token');
+  window.location.href = '/login';
+};
+
+
   /* ----------------- UI ----------------- */
 
   return (
     <div>
       <h2>Task Manager</h2>
+      <button onClick={logout} style={{ float: 'right' }}>
+  Logout
+</button>
+      
 
       {/* 🔹 Add Task */}
       <div>

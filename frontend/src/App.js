@@ -5,6 +5,7 @@ import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './routes/ProtectedRoute';
 import PublicRoute from './routes/PublicRoute';
 import Register from './pages/Register';
+import PrivateRoute from './routes/privetRoute';
 
 export default function App() {
   return (
@@ -15,7 +16,9 @@ export default function App() {
           {/* Default route */}
           <Route path="/" element={
             <ProtectedRoute>
-              <Dashboard />
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
             </ProtectedRoute>
           } />
 
