@@ -1,6 +1,6 @@
 import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import api from '../api/axios';
-import { useNavigate } from 'react-router-dom';
 
 export default function Register() {
   const [username, setUsername] = useState('');
@@ -10,12 +10,11 @@ export default function Register() {
 
   const submit = async (e) => {
     e.preventDefault();
-
     try {
       await api.post('/auth/register', {
         username,
         email,
-        password
+        password,
       });
 
       alert('Registration successful. Please login.');
@@ -26,30 +25,56 @@ export default function Register() {
   };
 
   return (
-    <form onSubmit={submit}>
-      <h2>Register</h2>
+    <div className="app-container">
+      <div className="dashboard" style={{ maxWidth: '420px' }}>
 
-      <input
-        placeholder="Username"
-        value={username}
-        onChange={e => setUsername(e.target.value)}
-      />
+        <h2 className="text-center">Register</h2>
 
-      <input
-        placeholder="Email"
-        value={email}
-        onChange={e => setEmail(e.target.value)}
-      />
+        <form className="form" onSubmit={submit}>
 
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-      />
+          <div className="form-group">
+            <label>Username</label>
+            <input
+              placeholder="Enter your username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </div>
 
-      <button type="submit">Register</button>
-      <p>Already have an account? <a href='/login'>Login</a></p>
-    </form>
+          <div className="form-group">
+            <label>Email</label>
+            <input
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Password</label>
+            <input
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          <button className="btn btn-primary" type="submit">
+            Register
+          </button>
+
+        </form>
+
+        <p className="text-center mt-2">
+          Already have an account? <Link to="/login">Login</Link>
+        </p>
+
+      </div>
+    </div>
   );
 }
