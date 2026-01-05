@@ -30,7 +30,7 @@ exports.getTasks = async (req, res) => {
     status,
     priority,
     page = 1,
-    limit = 5
+    limit =8
   } = req.query;
 
   const query = {

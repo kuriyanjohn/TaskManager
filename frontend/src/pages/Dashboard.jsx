@@ -7,6 +7,7 @@ export default function Dashboard() {
   const [title, setTitle] = useState('');
   const [editId, setEditId] = useState(null);
   const [editTitle, setEditTitle] = useState('');
+  const [editStatus, setEditStatus] = useState('todo');
 
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState('');
@@ -15,7 +16,7 @@ export default function Dashboard() {
 
   const fetchTasks = async () => {
     const res = await api.get('/tasks', {
-      params: { search, status, page, limit: 5 },
+      params: { search, status, page, limit: 8 },
     });
 
     setTasks(res.data.tasks);
@@ -37,17 +38,25 @@ export default function Dashboard() {
   };
 
   const startEdit = (task) => {
-    setEditId(task._id);
-    setEditTitle(task.title);
-  };
+  setEditId(task._id);
+  setEditTitle(task.title);
+  setEditStatus(task.status);
+};
 
   const saveEdit = async (id) => {
-    if (!editTitle.trim()) return;
-    await api.put(`/tasks/${id}`, { title: editTitle });
-    setEditId(null);
-    setEditTitle('');
-    fetchTasks();
-  };
+  if (!editTitle.trim()) return;
+
+  await api.put(`/tasks/${id}`, {
+    title: editTitle,
+    status: editStatus
+  });
+
+  setEditId(null);
+  setEditTitle('');
+  setEditStatus('todo');
+  fetchTasks();
+};
+
 
   const deleteTask = async (id) => {
     if (!window.confirm('Delete this task?')) return;
@@ -120,30 +129,41 @@ export default function Dashboard() {
             tasks.map((task) => (
               <div className="task-card" key={task._id}>
                 {editId === task._id ? (
-                  <>
-                    <input
-                      value={editTitle}
-                      onChange={(e) => setEditTitle(e.target.value)}
-                    />
-                    <div className="task-actions">
-                      <button
-                        className="btn btn-primary"
-                        onClick={() => saveEdit(task._id)}
-                      >
-                        Save
-                      </button>
-                      <button
-                        className="btn btn-secondary"
-                        onClick={() => setEditId(null)}
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </>
-                ) : (
+  <>
+    <input
+      value={editTitle}
+      onChange={(e) => setEditTitle(e.target.value)}
+    />
+
+    <select
+      value={editStatus}
+      onChange={(e) => setEditStatus(e.target.value)}
+    >
+      <option value="todo">Todo</option>
+      <option value="in-progress">In Progress</option>
+      <option value="done">Done</option>
+    </select>
+
+    <div className="task-actions">
+      <button
+        className="btn btn-primary"
+        onClick={() => saveEdit(task._id)}
+      >
+        Save
+      </button>
+      <button
+        className="btn btn-secondary"
+        onClick={() => setEditId(null)}
+      >
+        Cancel
+      </button>
+    </div>
+  </>
+) : (
+
                   <>
                     <h3>{task.title}</h3>
-                    <p>Status: {task.status}</p>
+<p className="task-meta">Status: {task.status}</p>
                     <div className="task-actions">
                       <button
                         className="btn btn-secondary"
