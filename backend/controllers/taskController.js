@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Task = require('../models/Task');
-const auth = require('../middleware/auth');
 
-exports.createTask = async (req, res) => {
+const createTask = async (req, res) => {
   const { title, description, priority, dueDate, tags } = req.body;
 
   if (!title) {
@@ -22,7 +21,7 @@ exports.createTask = async (req, res) => {
   res.status(201).json(task);
 };
 
-exports.getTasks = async (req, res) => {
+const getTasks = async (req, res) => {
   const userId = req.user.id;
 
   const {
@@ -70,7 +69,7 @@ exports.getTasks = async (req, res) => {
 };
 
 
-exports.updateTask = async (req, res) => {
+const updateTask = async (req, res) => {
   const { id } = req.params;
 
   const task = await Task.findOneAndUpdate(
@@ -86,7 +85,7 @@ exports.updateTask = async (req, res) => {
   res.json(task);
 };
 
-exports.deleteTask = async (req, res) => {
+const deleteTask = async (req, res) => {
   const { id } = req.params;
 
   const task = await Task.findOneAndDelete({
@@ -101,3 +100,9 @@ exports.deleteTask = async (req, res) => {
   res.json({ message: 'Task deleted' });
 };
 
+module.exports={
+  createTask,
+  getTasks,
+  updateTask,
+  deleteTask
+}
