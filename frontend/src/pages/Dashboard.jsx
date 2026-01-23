@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState,useCallback } from 'react';
 import api from '../api/axios';
 
 export default function Dashboard() {
@@ -14,18 +14,18 @@ export default function Dashboard() {
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState(1);
 
-  const fetchTasks = async () => {
+  const fetchTasks = useCallback(async () => {
     const res = await api.get('/tasks', {
       params: { search, status, page, limit: 8 },
     });
 
     setTasks(res.data.tasks);
     setPages(res.data.pagination.pages);
-  };
+  },[]);
 
   useEffect(() => {
     fetchTasks();
-  }, [search, status, page]);
+  },[fetchTasks]);
 
   /* ---------- ACTIONS ---------- */
 
